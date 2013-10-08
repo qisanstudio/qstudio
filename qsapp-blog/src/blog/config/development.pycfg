@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+
+APPNAME = 'blog'
+DEBUG = True
+DEFAULT_SUBDOMAIN = 'www'
+
+DEFAULT_BLOG_ICON_HASHKEY = '_X6VuhMzX2uZ2hTQrdpBQlVQ51SK2hqu3aJIKb9Dt1cwAAAAMAAAAFBO'
+USER_ANON_UKEY = 'gc806l'
+
+ENABLE_SQL_ECHO = False
+SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://blog:bbbb@localhost/blog'
+SQLALCHEMY_DATABASE_SLAVE_URIS = ['postgresql+psycopg2://blog:bbbb@localhost/blog']
+REDIS_URL = 'redis://localhost:6379/1'
+
+EVERNOTE_CONSUMER_KEY = 'yimiqisan-4018'
+EVERNOTE_CONSUMER_SECRET = '5b0f55d3308a0d73'
+
+UWSGI_SOCKET = '0.0.0.0:16001'
+UWSGI_MODULE = 'blog:app'

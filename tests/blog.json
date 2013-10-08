@@ -1,0 +1,1 @@
+{"uwsgi": {"virtualenv": "/Users/liuzhiyong/Workspace/minisite/.venv", "processes": 1, "http": "0.0.0.0:5001", "module": "blog:app", "buffer-size": 32768, "post-buffering": 4096, "master": true, "env": ["QISAN_ENVIRON=DEVELOPMENT", "QISAN_APPNAME=blog"]}}

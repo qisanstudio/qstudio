@@ -1,0 +1,65 @@
+#! /bin/bash
+
+PROJ_BASE=`pwd`
+export VIRTUAL_ENV=$PROJ_BASE/.venv
+export VENV_BIN=$VIRTUAL_ENV/bin
+export TOOLS_PATH=$PROJ_BASE/tools
+export REQUIREMENTS_TXT=$TOOLS_PATH/requirements.txt
+export REQUIREMENT_EXCLUDES="$TOOLS_PATH/requirement_excludes.txt"
+export STAGING_REQUIREMENTS="$TOOLS_PATH/staging_requirements.txt"
+export PACKAGES_DIR=$TOOLS_PATH/python-packages
+export QISAN_ENVIRON='DEVELOPMENT'
+
+source $VENV_BIN/activate
+
+cu() {
+    deactivate
+    unset PROJ_BASE
+    unset VENV_BIN
+    unset TOOLS_PATH
+    unset REQUIREMENTS_TXT
+    unset PACKAGES_DIR
+    unset QISAN_ENVIRON
+
+    unset -f manager
+    unset -f complete_manager
+    unset -f cu
+}
+
+_manager_freeze() {
+    command pip freeze > $REQUIREMENTS_TXT
+}
+
+_manager_download() {
+    echo $PACKAGES_DIR
+    command pip install --download=$PACKAGES_DIR -r $REQUIREMENTS_TXT
+}
+
+manager() {
+    ACTION=$1
+    
+    case $1 in
+        freeze)
+            _manager_freeze
+            ;;
+        download)
+            _manager_download
+            ;;
+        *)
+            ehco "Usage: manager {freeze | donwload}"
+    esac
+    unset ACTION
+}
+
+complete_manager() {
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    
+    action="freeze download"
+    
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=( $(compgen -W "${action}" -- ${cur}) )
+    fi
+}
+
+complete -F complete_manager manager

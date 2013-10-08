@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set readable = {
+    400: '请求错误',
+    401: '未授权',
+    403: '禁止访问',
+    404: '找不到页面',
+    405: '不允许的方法',
+    406: '不可接受',
+    413: '请求实体过长',
+    500: '服务内部错误',
+    502: '网关错误',
+    503: '服务不可用',
+    504: '网关超时',
+}.get(error.code, error.name) %}
+{% block title %}{{ error.code }} - {{ readable }} | {{ super() }}{% endblock %}
+{% block body %}
+        <div class="grow error-page">
+            <div class="main">
+                <p>{{ error.description }}
+                {% if request.referrer and config['SERVER_NAME'] in request.referrer %}
+                    <a href="{{ request.referrer }}">回上一页</a>
+                {% endif %}
+                </p>
+            </div>
+        </div>
+{% endblock %}
+

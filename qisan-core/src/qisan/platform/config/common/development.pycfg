@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+"""全局配置文件 for DEVELOPMENT"""
+from __future__ import unicode_literals
+
+import os
+import platform
+
+ENVIRON = 'DEVELOPMENT'
+
+USE_HTTP = False
+
+# 全局的版本号, 没什么用, 可能用到user-agent中
+VERSION = '1.0'
+
+DOMAIN_NAME = 'dev.guokr.com'  # deprecated, use SERVER_NAME instead
+SERVER_NAME = 'dev.yimiqisan.com'
+
+UNIFIED_PORT = 15000  # deprecated, use NGINX_LISTEN instead
+
+# 将被迁移的backend数据库
+DB_BACKEND = 'postgresql+psycopg2://dbu:dddd@localhost/backend'
+
+
+AXIUS_REDIS = 'redis://localhost:6379/0'
+
+QISAN_DIR = os.path.expanduser('~/qstudio')
+
+# 共享 redis 的配置
+SHARED_REDIS = 'redis://localhost:6379/1'
+
+SERVER_APIS = 'apis.%s:15000' % SERVER_NAME
+SERVER_SERVICES = 'services.%s:15000' % SERVER_NAME
+SERVER_ACCOUNT = 'account.%s:15000' % SERVER_NAME
+SERVER_BACKENDS = 'backends.%s:15000' % SERVER_NAME
+SERVER_WWW = 'www.%s:15000' % SERVER_NAME
+
+# uWSGI emperor 启动配置
+UWSGI_VIRTUALENV = os.environ['VIRTUAL_ENV']
+UWSGI_PIDFILE = os.path.join(UWSGI_VIRTUALENV, 'var/run/qstudio.pid')
+UWSGI_LOGFILE = os.path.join(UWSGI_VIRTUALENV, 'var/run/qstudio.log')
+UWSGI_CPU_AFFINITY = 2
+UWSGI_LOG_MAXSIZE = 268435456
+UWSGI_EMPEROR = os.path.join(UWSGI_VIRTUALENV, 'etc/uwsgi/vassals')
+UWSGI_MEMORY_REPORT = True
+UWSGI_LOG_ZERO = True
+UWSGI_LOG_SLOW = True
+UWSGI_LOG_4XX = True
+UWSGI_LOG_5XX = True
+UWSGI_LOG_BIG = True
+UWSGI_LOG_SENDFILE = True
+
+# uWSGI vassal 全局配置
+# 以UWSGI_VASSAL_ 开头的配置会被读为每个 uwsgi vassal 进程的默认配置
+# 可以被 app 自带的 UWSGI_ 开头的配置覆盖
+UWSGI_VASSAL_PROCESSES = 1
+UWSGI_VASSAL_LISTEN = 100
+UWSGI_VASSAL_VIRTUALENV = UWSGI_VIRTUALENV
+UWSGI_VASSAL_BUFFER_SIZE = 32768
+UWSGI_VASSAL_POST_BUFFERING = 4096
+UWSGI_VASSAL_MASTER = True
+UWSGI_VASSAL_SO_KEEPALIVE = True
+
+# Flask 应用全局配置
+# 以 FLASK_ 开头的配置会被读为 APP 的默认配置 (并去掉 FLASK_ 前缀),
+# 都可以被 app 自带配置覆盖
+FLASK_SQLALCHEMY_ECHO = False
+FLASK_SESSION_COOKIE_DOMAIN_ADAPTIVE = True
+FLASK_DEFAULT_SUBDOMAIN = 'www'
+FLASK_ADMINS = ['yimiqisan@gmail.com']
+FLASK_SECRET_KEY = '65cf603944b1b32c8d6ec2d2a880ec8a57b61b5a'
+FLASK_DOMAIN_NAME = SERVER_NAME  # deprecated: use FLASK_SERVER_NAME instead
+FLASK_SERVER_NAME = SERVER_NAME
+FLASK_ENABLE_APPRAISER = True
+FLASK_OAUTH2_CLIENT_ID = 32353
+FLASK_OAUTH2_CLIENT_SECRET = '86335d9d444b2bd9f65544e989581cf185311d1d'
+FLASK_DEFAULT_AVATAR_HASHKEY = 'TL27-S81EuoahCN7pVlXlzCI6I07ORoBQCo7fDv5EUqgAAAAoAAAAFBO'
+# 考虑使用不同的 id, 这样会有更好的安全性
+FLASK_PANEL_OAUTH2_CLIENT_ID = FLASK_OAUTH2_CLIENT_ID
+FLASK_PANEL_OAUTH2_CLIENT_SECRET = FLASK_OAUTH2_CLIENT_SECRET
+FLASK_PERMANENT_SESSION_LIFETIME = 2678400  # 86400 * 31
+# 'always' 代表总是抛出exceed错误 (或验证码),
+# true代表正常检查, false代表永不检查
+FLASK_ENABLE_THRESHOLD_CONTROL = True
+FLASK_UWSGI_IMPORT = 'qisan.platform.monkey'  # 应用启动前的 monkey patch
+FLASK_UWSGI_GEVENT = 100  # 对 flask 应用开启 gevent
+FLASK_REDIS_URL = SHARED_REDIS
+
+# PKG 设置
+# 使用 devpi 来管理 python 的包
+PKG_DEVPI_REPOSITORIES = {
+    'dev': {
+        'username': 'qisan',
+        'password': 'qisan',
+        'use': 'http://pypi.yimiqisan.com/',
+        'index': 'qisan/dev',
+        'simple': 'http://pypi.yimiqisan.com/qstudio/dev/+simple'},
+    'prod': {
+        'username': 'qisan',
+        'password': 'qisan',
+        'use': 'http://pypi.yimiqisan.com/',
+        'index': 'qisan/prod',
+        'simple': 'http://pypi.yimiqisan.com/qisan/prod/+simple'},
+}
