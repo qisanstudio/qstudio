@@ -13,7 +13,7 @@ USE_HTTP = False
 VERSION = '1.0'
 
 DOMAIN_NAME = 'dev.guokr.com'  # deprecated, use SERVER_NAME instead
-SERVER_NAME = 'dev.yimiqisan.com'
+SERVER_NAME = 'dev.yimiqisan.com:16001'
 
 UNIFIED_PORT = 15000  # deprecated, use NGINX_LISTEN instead
 

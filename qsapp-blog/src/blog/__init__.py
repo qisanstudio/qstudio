@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 from qisan.platform.flask import QisanFlask
-
+from flask import Flask
 
 app = QisanFlask(__name__)
 
@@ -11,7 +10,7 @@ with app.app_context():
     from .backends import apis
     from .backends import views
     from .backends import panel
-    from .blueprints import (blueprint_apis, 
+    from .blueprints import (blueprint_apis,
                              blueprint_www,
                              blueprint_panel)
 
@@ -21,5 +20,3 @@ with app.app_context():
                            url_prefix='/blog', subdomain='www')
     app.register_blueprint(blueprint_panel,
                            url_prefix='/blog', subdomain='panel')
-
-

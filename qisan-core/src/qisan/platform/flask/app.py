@@ -14,6 +14,7 @@ import gevent
 from flask import Flask, g, request
 from flask.helpers import locked_cached_property
 from jinja2 import FileSystemLoader
+from werkzeug.urls import url_quote
 
 from qisan.platform import config
 from .config import init_app_config
@@ -21,7 +22,7 @@ from .errors import HTTPException, NotFound, InternalServerError
 
 
 class QisanFlask(Flask):
-    
+
     def __init__(self, *args, **kwargs):
         """
         初始化 Flask 实例
@@ -84,7 +85,7 @@ class QisanFlask(Flask):
                 return error
             else:
                 return InternalServerError('服务器正在维护，请稍后访问')
-    
+
     @property
     def external_url_adapter(self):
         from qisan.platform.routing_rules import url_map as external_url_map
@@ -98,7 +99,6 @@ class QisanFlask(Flask):
                 server_name,
                 script_name=self.config['APPLICATION_ROOT'] or '/',
                 url_scheme=self.config['PREFERRED_URL_SCHEME'])
-
 
     def _external_url_handler(self, error, endpoint, values):
         """在本地的 url_for 无法生成链接时, 查找全局路由表"""
@@ -118,7 +118,6 @@ class QisanFlask(Flask):
             rv += '#' + url_quote(anchor)
         return rv
 
-
     @locked_cached_property
     def jinja_loader(self):
         """The Jinja loader for this package bound object.
@@ -129,9 +128,11 @@ class QisanFlask(Flask):
             return FileSystemLoader([
                 os.path.join(self.root_path, 'frontends', self.template_folder),
                 os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                             'templates')])    
-
+                             'templates')])
 
     def __call__(self, environ, start_response):
-        wsgi_app = self.wsgi_app
+        if not self.testing and self.debugger_wsgi_app:
+            wsgi_app = self.debugger_wsgi_app
+        else:
+            wsgi_app = self.wsgi_app
         return wsgi_app(environ, start_response)
