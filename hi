@@ -31,8 +31,11 @@ _manager_freeze() {
 }
 
 _manager_download() {
-    echo $PACKAGES_DIR
     command pip install --download=$PACKAGES_DIR -r $REQUIREMENTS_TXT
+}
+
+_manager_install() {
+    command pip install -f=$PACKAGES_DIR -r $REQUIREMENTS_TXT
 }
 
 manager() {
@@ -45,8 +48,11 @@ manager() {
         download)
             _manager_download
             ;;
+        install)
+            _manager_install
+            ;;
         *)
-            ehco "Usage: manager {freeze | donwload}"
+            ehco "Usage: manager {freeze | donwload | install}"
     esac
     unset ACTION
 }
