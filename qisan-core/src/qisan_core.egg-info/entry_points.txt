@@ -1,3 +1,0 @@
-[console_scripts]
-helm = qisan.helm:main
-
