@@ -16,12 +16,12 @@ gevent==1.0rc2
 greenlet==0.4.1
 httplib2==0.8
 itsdangerous==0.23
+mock==1.0.1
 oauth2==1.5.211
 psycogreen==1.0
 psycopg2==2.4.5
 pyCEO==1.1
 pytz==2013.7
-qisan-core==1.0
 qsapp-blog==0.1
 redis==2.8.0
 sh==1.09
